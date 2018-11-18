@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Checks available % of IP addresses within subnets
+Resources:
+  IPAddressCheckLambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement: 
+          - Effect: 'Allow'
+            Principal:
+              Service: 
+                - 'lambda.amazonaws.com'
+            Action:  
+              - sts:AssumeRole
+      RoleName: 'IP_Address_Check_Lambda_Role'
+      Path: '/'
+      Policies:
+        -
+          PolicyName: 'IP_Address_Check_Lambda_Policy'
+          PolicyDocument: 
+            Version: '2012-10-17'
+            Statement:
+              -
+                Effect: 'Allow'
+                Action: [
+                'ec2:DescribeVpcs',
+                'ec2:DescribeSubnets',
+                'ec2:DescribeVpcAttribute'
+                ]
+                Resource: '*'
+              -
+                Effect: 'Allow'
+                Action: 'sns:Publish'
+                Resource: 'arn:aws:sns:*:*:*'
+              -
+                Effect: 'Allow'
+                Action: [
+                'logs:CreateLogGroup',
+                'logs:CreateLogStream',
+                'logs:PutLogEvents'
+                ]
+                Resource: '*'
+  CheckIPsAvailable:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      FunctionName: 'Lambda_Check_Available_IP_Address_Space'
+      Description: 'Checks percentage of available IP address within a subnet'
+      MemorySize: 128
+      Timeout: 15
+      Role: !GetAtt IPAddressCheckLambdaRole.Arn
+      CodeUri: ./LambdaCheckIPAvailableSpace
+      Environment:
+        Variables:
+          VPC_ID: vpc-f908209f
+          PERCENTAGE_WARNING: '70'
+          TARGET_ARN: !Ref IPAddressExahustionSNSTopic
+          MESSAGE_SUBJECT: 'You have subnets running out of available ip addresses!'           
+  ScheduledRule: 
+    Type: 'AWS::Events::Rule'
+    Properties: 
+      Description: 'ScheduledRule'
+      Name: 'Lambda_Check_Available_IP_Addresses'
+      ScheduleExpression: 'rate(1 minute)'
+      State: 'ENABLED'
+      Targets: 
+        - 
+          Arn: 
+            Fn::GetAtt: 
+              - 'CheckIPsAvailable'
+              - 'Arn'
+          Id: 'TargetFunctionV1'
+  PermissionForEventsToInvokeLambda: 
+   Type: 'AWS::Lambda::Permission'
+   Properties: 
+      FunctionName: 
+        Ref: 'CheckIPsAvailable'
+      Action: 'lambda:InvokeFunction'
+      Principal: 'events.amazonaws.com'
+      SourceArn: 
+        Fn::GetAtt: 
+          - 'ScheduledRule'
+          - 'Arn' 
+  IPAddressExahustionSNSTopic: 
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: 'Notification of IP Exhaustion'
+      TopicName: 'IPAddressExahustion'
