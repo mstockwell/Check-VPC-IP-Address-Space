@@ -1,7 +1,7 @@
 # A Lambda utility which checks remaining availiable IP addresses within VPC subnets
 
-VPC subnets have a finite number of available ip addresses.  Through automation and some AWS services (such as Lambda accessing resources in a VPC, and Fargate Task) 
-your subnets may experience IP exhaustion. This application allows you to set a threshold for notification when the remaining available IPs in a subnet reach a certain percentage.  
+VPC subnets have a finite number of available ip addresses.  Through automation and some AWS services (e.g. Lambda accessing resources in a VPC, Fargate creating ENIs) 
+your subnets may begin to experience IP exhaustion without you explicitly knowing so. This application allows you to set a threshold for notification when the remaining available IPs in a subnet reach a certain percentage.  
 The default is 20% but this can be changed using the PERCENTAGE_WARNING environment variable.  
 
 # Two Modes: Single VPC and All VPCs All Regions
