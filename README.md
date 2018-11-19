@@ -11,10 +11,19 @@ check all subnets in all VPCs in all Regions.  As you can imagine, selecting thi
 (based on intial tests).
 
 # Two Options for Deployment: Copy & Paste Lambda or SAM
-Download the files to your local machine using git.  For example:
-https://github.com/mstockwell/Check-VPC-IP-Address-Space.git
+Download the files to your local machine using git.  For example: git clone https://github.com/mstockwell/Check-VPC-IP-Address-Space.git
 
 ## Copy & Paste Deployement
+Author a new Python 3.6 lambda function from Scratch.  Copy the code from LambdaCheckIPAvailableSpace\lambda_function.py into you new lambda and save.
+Set the timeout to 180 seconds. 
+Add the following Environment Variables:
+. VPC_ID (Enter the VPC_ID of the VPC you wanted monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
+. TARGET_ARN (The value will be the ARN of the SNS topic you create in the following step)
+. PERCENTAGE_WARNING (A number from 0 - 100 indicating remaining % of available IPs within a subnet.  For instance 20 means you want to be notified when a subnet only has 20% remaining IP addresses avaiable)
+. MESSAGE_SUBJECT (The Subject line of the message you wanted displayed (e.g. in email or txt message)
+
+Create an SNS topic and update the TARGET_ARN environment variable with the SNS topic ARN. Subscribe to the topic.
+Create a CloudWatch Schedule Event that triggers the Lambda function based on a rate you set, e.g. every 8 hours.
 
 ## SAM Deployment
 At the command line, enter the following command and press return: (select an S3 bucket and name for your CloudFormation stack)
@@ -27,3 +36,7 @@ Next, enter the following command and press return: aws cloudformation deploy --
 You should see Waiting for changeset to be created.. 
 The above command creates the necessary AWS infrastructure including a lambda role, an SNS topic, and a CloudWatch Schedule Event.  
 Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, you will see the message, Successfully created/updated stack - <cloudformationstack>
+
+Once deployed, you will need to enter a VPC_ID in the environment variable IF you want single VPC mode, otherwise the utility will scan all subnets, in all VPCs
+in all Regions.  In addition, you will need to subscribe to the SNS topic named, 'IPAddressExahustion'.  You will also need to enable the Cloudwatch Schedule Event named,
+'Lambda_Check_Available_IP_Addresses'.  The event runs every 8 hours.  You can edit the run rate to meet your needs.
