@@ -51,7 +51,7 @@ Resources:
       FunctionName: 'Lambda_Check_Available_IP_Address_Space'
       Description: 'Checks percentage of available IP address within a subnet'
       MemorySize: 128
-      Timeout: 15
+      Timeout: 120
       Role: !GetAtt IPAddressCheckLambdaRole.Arn
       CodeUri: ./LambdaCheckIPAvailableSpace
       Environment:

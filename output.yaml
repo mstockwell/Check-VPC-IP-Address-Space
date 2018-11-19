@@ -3,7 +3,7 @@ Description: Checks available % of IP addresses within subnets
 Resources:
   CheckIPsAvailable:
     Properties:
-      CodeUri: s3://mels3skobucket/LambdaFunction/a91a1efce4e397075ea325f8d20ba69a
+      CodeUri: s3://mels3skobucket/LambdaFunction/2711395ae110b4a67d1c0e8b5cdc1808
       Description: Checks percentage of available IP address within a subnet
       Environment:
         Variables:
@@ -20,7 +20,7 @@ Resources:
         - IPAddressCheckLambdaRole
         - Arn
       Runtime: python3.6
-      Timeout: 15
+      Timeout: 120
     Type: AWS::Serverless::Function
   IPAddressCheckLambdaRole:
     Properties:
