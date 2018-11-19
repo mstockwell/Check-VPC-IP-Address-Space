@@ -23,13 +23,15 @@ def compute_available_ips(subnet):
     
 def lambda_handler(event, context):
     subnets = list(vpc.subnets.all())
+    message_txt = ''
     for subnet in subnets:
         percent_remaining = compute_available_ips(subnet)
-        print ('percent_remaining: ', percent_remaining,'%')
         if percent_remaining <= percent_warning:
-            message_txt = 'Subnet: ' + subnet.id + ' has only ' + str(percent_remaining) + '% remaining IP addresses available!' 
-            notify.publish (
-                TargetArn=target_arn,
-                Subject=subject,
-                Message=(message_txt)
-            )
+            message_txt += 'Subnet: ' + subnet.id + ' has ' + str(percent_remaining) \
+            + '% remaining IP addresses available...' +'\r'
+    if message_txt:
+        notify.publish (
+        TargetArn=target_arn,
+        Subject=subject,
+        Message=(message_txt)
+        )
