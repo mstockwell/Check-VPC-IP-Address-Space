@@ -25,9 +25,10 @@ Resources:
               -
                 Effect: 'Allow'
                 Action: [
-                'ec2:DescribeVpcs',
                 'ec2:DescribeSubnets',
-                'ec2:DescribeVpcAttribute'
+                'ec2:DescribeVpcs',
+                'ec2:DescribeVpcAttribute',
+                'ec2:DescribeRegions'
                 ]
                 Resource: '*'
               -
@@ -64,8 +65,8 @@ Resources:
     Properties: 
       Description: 'ScheduledRule'
       Name: 'Lambda_Check_Available_IP_Addresses'
-      ScheduleExpression: 'rate(1 minute)'
-      State: 'ENABLED'
+      ScheduleExpression: 'rate(8 hours)'
+      State: 'DISABLED'
       Targets: 
         - 
           Arn: 

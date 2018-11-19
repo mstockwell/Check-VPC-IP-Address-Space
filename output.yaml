@@ -3,7 +3,7 @@ Description: Checks available % of IP addresses within subnets
 Resources:
   CheckIPsAvailable:
     Properties:
-      CodeUri: s3://mels3skobucket/LambdaFunction/44bf14e73063db1fc6d9e832b09d29ac
+      CodeUri: s3://mels3skobucket/LambdaFunction/a91a1efce4e397075ea325f8d20ba69a
       Description: Checks percentage of available IP address within a subnet
       Environment:
         Variables:
@@ -38,9 +38,10 @@ Resources:
       - PolicyDocument:
           Statement:
           - Action:
-            - ec2:DescribeVpcs
             - ec2:DescribeSubnets
+            - ec2:DescribeVpcs
             - ec2:DescribeVpcAttribute
+            - ec2:DescribeRegions
             Effect: Allow
             Resource: '*'
           - Action: sns:Publish
@@ -76,8 +77,8 @@ Resources:
     Properties:
       Description: ScheduledRule
       Name: Lambda_Check_Available_IP_Addresses
-      ScheduleExpression: rate(1 minute)
-      State: ENABLED
+      ScheduleExpression: rate(8 hours)
+      State: DISABLED
       Targets:
       - Arn:
           Fn::GetAtt:
