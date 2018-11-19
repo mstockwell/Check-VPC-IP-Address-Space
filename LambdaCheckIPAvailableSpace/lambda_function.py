@@ -9,7 +9,7 @@ ec2 = boto3.resource('ec2')
 notify = boto3.client('sns')
 
 vpc = ec2.Vpc(os.environ['VPC_ID'])
-percent_warning = int(os.environ['PERCENTAGE_WARNING'])/100
+percent_warning = int(os.environ['PERCENTAGE_WARNING'])
 target_arn = os.environ['TARGET_ARN']
 subject = os.environ['MESSAGE_SUBJECT']
 
