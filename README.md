@@ -17,13 +17,13 @@ https://github.com/mstockwell/Check-VPC-IP-Address-Space.git
 ## Copy & Paste Deployement
 
 ## SAM Deployment
-At the command line, enter the following command and press return:
-`aws cloudformation package --template-file template.yaml  --output-template-file output.yaml --s3-bucket <yourbucketname>  --s3-prefix <yourcloudformationname>`  
+At the command line, enter the following command and press return: (select an S3 bucket and name for your CloudFormation stack)
+`aws cloudformation package --template-file template.yaml  --output-template-file output.yaml --s3-bucket <yourbucketname>  --s3-prefix <cloudformationstack>`  
 
 The above command packages your lambda functions and puts them in your S3 bucket.  In addition, the SAM template will be transformed into a CloudFormation template to be used in the next step for creating your infrastructure stack.
 
-Next, enter the following command and press return: aws cloudformation deploy --template-file output.yaml --stack-name <yourcloudformationname> --capabilities CAPABILITY_NAMED_IAM
+Next, enter the following command and press return: aws cloudformation deploy --template-file output.yaml --stack-name <cloudformationstack> --capabilities CAPABILITY_NAMED_IAM
 
 You should see Waiting for changeset to be created.. 
 The above command creates the necessary AWS infrastructure including a lambda role, an SNS topic, and a CloudWatch Schedule Event.  
-Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, Successfully created/updated stack - Alexa-Workshop-App
+Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, you will see the message, Successfully created/updated stack - <cloudformationstack>
