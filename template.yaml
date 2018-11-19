@@ -57,7 +57,7 @@ Resources:
       Environment:
         Variables:
           VPC_ID: vpc-f908209f
-          PERCENTAGE_WARNING: '70'
+          PERCENTAGE_WARNING: '20'
           TARGET_ARN: !Ref IPAddressExahustionSNSTopic
           MESSAGE_SUBJECT: 'You have subnets running out of available ip addresses!'           
   ScheduledRule: 
