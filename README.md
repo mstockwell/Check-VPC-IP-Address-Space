@@ -7,40 +7,23 @@ The default is 20% but this can be changed using the PERCENTAGE_WARNING environm
 # Two Modes: Single VPC and All VPCs All Regions
 There are two options for running this utility: single VPC and All Regions All VPCs.  If the environment Variable, VPC_ID is populated,
 the utility will only check for subnets within the VPC idenfified by VPC_ID.  If VPC_ID is left blank or is missing, the utility will
-check all subnets in all VPCs in all Regions.  As you can imagine, select this option will require the Lambda function to run for 2-3 minutes (based on intial tests).
+check all subnets in all VPCs in all Regions.  As you can imagine, selecting this option will require the Lambda function to run for 2-3 minutes, or more
+(based on intial tests).
 
 # Two Options for Deployment: Copy & Paste Lambda or SAM
+Download the files to your local machine using git.  For example:
+https://github.com/mstockwell/Check-VPC-IP-Address-Space.git
 
 ## Copy & Paste Deployement
 
 ## SAM Deployment
-
-
-Code and infrastructure templates for this workshop are securely stored in AWS CodeCommit.  CodeCommit is a fully-managed source control service that makes it easy for companies to host secure and highly scalable private Git repositories. CodeCommit eliminates the need to operate your own source control system or worry about scaling its infrastructure. You can use CodeCommit to securely store anything from source code to binaries, and it works seamlessly with your existing Git tools.
-
-Within the Cloud9 Terminal window, enter the following command:
-
-`git clone https://github.com/mstockwell/Alexa-Serverless-Comprehend-Workshop.git`  This process, which should take less than a minute, will download and clone the repo to your Cloud9 environment.
-
-Next, we will change the working directory to the local git repository you just cloned in your Cloud9 environment.  Within the Terminal window, type the following and hit return: `cd Alexa-Serverless-Comprehend-Workshop`
-
-## Create an S3 bucket to store and deploy AWS Lambda functions 
-
-S3 is AWS’ object storage service.  We will automatically be implementing most of the infrastructure and code using two AWS services, CloudFormation and SAM, described in detail later in the document.  SAM requires Lambda code to be stored in S3 so that CloudFormation can access it to deploy your lambda functions when it builds out infrastructure in AWS.  We will be creating your S3 bucket via the AWS command line.  
-
-S3 buckets must be globally unique across all customers.  Therefore, a script has been created that will uniquely name and create your S3 bucket.  Confirm you are still in the *Alexa-Serverless-Comprehend-Workshop* directory and execute the following command in the Cloud9 terminal window: `. createbucket.sh` **(Don’t forget the leading period)**
-
-In response, you will see *make_bucket:* followed by the unique name of your S3 bucket.  Go back to the AWS Console and select the S3 service, making sure you are in the US-East Region.  You will see your new S3 bucket listed in the console.
-
-
-## Create AWS infrastructure and deploy Lambda functions
-
-AWS CloudFormation provides a common language to describe and provision all the infrastructure resources in your cloud environment. CloudFormation allows you to use a simple text file to model and provision, in an automated and secure manner, all the resources needed for your applications across all regions and accounts. This file serves as the single source of truth for your cloud environment. 
-
-The AWS Serverless Application Model (SAM) is a model to define serverless applications. SAM is natively supported by AWS CloudFormation and defines simplified syntax for expressing serverless resources.
-
-### Run SAM and CloudFormation to create initial infrastructure and code
 At the command line, enter the following command and press return:
 `aws cloudformation package --template-file template.yaml  --output-template-file output.yaml --s3-bucket <yourbucketname>  --s3-prefix <yourcloudformationname>`  
 
 The above command packages your lambda functions and puts them in your S3 bucket.  In addition, the SAM template will be transformed into a CloudFormation template to be used in the next step for creating your infrastructure stack.
+
+Next, enter the following command and press return: aws cloudformation deploy --template-file output.yaml --stack-name <yourcloudformationname> --capabilities CAPABILITY_NAMED_IAM
+
+You should see Waiting for changeset to be created.. 
+The above command creates the necessary AWS infrastructure including a lambda role, an SNS topic, and a CloudWatch Schedule Event.  
+Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, Successfully created/updated stack - Alexa-Workshop-App
