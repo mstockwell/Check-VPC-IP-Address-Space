@@ -27,6 +27,7 @@ MESSAGE_SUBJECT (The Subject line of the message you wanted displayed (e.g. in e
 
 Create an SNS topic and update the TARGET_ARN environment variable with the SNS topic ARN. Subscribe to the topic.
 Create a CloudWatch Schedule Event that triggers the Lambda function based on a rate you set, e.g. every 8 hours.
+Create a role for Lambda with necessary permissions to describe regions, vpcs, subnets, and write to cloudwatch logs, and publish to SNS topic.
 
 ## SAM Deployment
 At the command line, enter the following command and press return: (select an S3 bucket and name for your CloudFormation stack)
