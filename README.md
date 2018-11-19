@@ -1,11 +1,20 @@
 # A Lambda utility which checks remaining availiable IP addresses within VPC subnets
 
-Subnets have a finite number of available ip addresses.  Through automation and some AWS services, such as Lambda accessing resources in a VPC and Fargate Tasks.
+VPC subnets have a finite number of available ip addresses.  Through automation and some AWS services (such as Lambda accessing resources in a VPC, and Fargate Task) 
+your subnets may experience IP exhaustion. This application allows you to set a threshold for notification when the remaining available IPs in a subnet reach a certain percentage.  
+The default is 20% but this can be changed using the PERCENTAGE_WARNING environment variable.  
 
-This application allows you to set a threshold for notification when the remaining available IPs in a subnet reach a certain percentage.  The default is 20%.  
+# Two Modes: Single VPC and All VPCs All Regions
+There are two options for running this utility: single VPC and All Regions All VPCs.  If the environment Variable, VPC_ID is populated,
+the utility will only check for subnets within the VPC idenfified by VPC_ID.  If VPC_ID is left blank or is missing, the utility will
+check all subnets in all VPCs in all Regions.  As you can imagine, select this option will require the Lambda function to run for 2-3 minutes (based on intial tests).
 
+# Two Options for Deployment: Copy & Paste Lambda or SAM
 
-## Download project source code and templates
+## Copy & Paste Deployement
+
+## SAM Deployment
+
 
 Code and infrastructure templates for this workshop are securely stored in AWS CodeCommit.  CodeCommit is a fully-managed source control service that makes it easy for companies to host secure and highly scalable private Git repositories. CodeCommit eliminates the need to operate your own source control system or worry about scaling its infrastructure. You can use CodeCommit to securely store anything from source code to binaries, and it works seamlessly with your existing Git tools.
 
