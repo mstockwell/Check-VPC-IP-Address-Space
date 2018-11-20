@@ -34,7 +34,7 @@ Resources:
               -
                 Effect: 'Allow'
                 Action: 'sns:Publish'
-                Resource: 'arn:aws:sns:*:*:*'
+                Resource: !Ref IPAddressExahustionSNSTopic
               -
                 Effect: 'Allow'
                 Action: [

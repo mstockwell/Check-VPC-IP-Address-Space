@@ -11,7 +11,7 @@ Resources:
           PERCENTAGE_WARNING: '20'
           TARGET_ARN:
             Ref: IPAddressExahustionSNSTopic
-          VPC_ID: vpc-f908209f
+          VPC_ID: ''
       FunctionName: Lambda_Check_Available_IP_Address_Space
       Handler: lambda_function.lambda_handler
       MemorySize: 128
@@ -46,7 +46,8 @@ Resources:
             Resource: '*'
           - Action: sns:Publish
             Effect: Allow
-            Resource: arn:aws:sns:*:*:*
+            Resource:
+              Ref: IPAddressExahustionSNSTopic
           - Action:
             - logs:CreateLogGroup
             - logs:CreateLogStream
