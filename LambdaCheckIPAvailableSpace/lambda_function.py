@@ -2,17 +2,25 @@ import boto3
 import os
 import ipaddress
 
+percent_warning = int(os.environ['PERCENTAGE_WARNING'])
+target_arn = os.environ['TARGET_ARN']
+subject = os.environ['MESSAGE_SUBJECT']
+message_txt = ''
+
 def compute_available_ips(subnet):
     available_ips = subnet.available_ip_address_count
     total_ips = ipaddress.ip_network(subnet.cidr_block).num_addresses
     return round(available_ips/total_ips,2)*100
     
+def determine_notification(percent_remaining, region, vpc, subnet):
+    if percent_remaining <= percent_warning:
+        global message_txt
+        message_txt += 'Subnet: ' + subnet + ' in VPC ' + vpc + \
+                    ' in Region ' + region + ' has ' + str(percent_remaining) \
+                    + '% remaining IP addresses available...' +'\r'
+                    
 def lambda_handler(event, context):
-    percent_warning = int(os.environ['PERCENTAGE_WARNING'])
-    target_arn = os.environ['TARGET_ARN']
-    subject = os.environ['MESSAGE_SUBJECT']
-    message_txt =''
-    
+    global message_txt
     if 'VPC_ID' not in os.environ or os.environ['VPC_ID'] == '' :
         region_client = boto3.client('ec2')
         regions = region_client.describe_regions()
@@ -25,10 +33,7 @@ def lambda_handler(event, context):
                 subnets = list(vpc_object.subnets.all())
                 for subnet in subnets:
                     percent_remaining = compute_available_ips(subnet)
-                    if percent_remaining <= percent_warning:
-                        message_txt += 'Subnet: ' + subnet.id + ' in VPC ' + vpc_object.vpc_id + \
-                            ' in Region ' + region['RegionName'] + ' has ' + str(percent_remaining) \
-                            + '% remaining IP addresses available...' +'\r'
+                    determine_notification(percent_remaining, region['RegionName'], vpc_object.vpc_id, subnet.subnet_id)
     else:
         if 'REGION_ID' not in os.environ or os.environ['REGION_ID'] == '':
             region_id = os.environ['AWS_REGION']
@@ -39,9 +44,7 @@ def lambda_handler(event, context):
         subnets = list(vpc.subnets.all())
         for subnet in subnets:
             percent_remaining = compute_available_ips(subnet)
-            if percent_remaining <= percent_warning:
-                message_txt += 'Subnet: ' + subnet.id + ' in VPC ' + vpc.vpc_id + ' has ' + \
-                str(percent_remaining) + '% remaining IP addresses available...' +'\r'
+            determine_notification(percent_remaining, region_id, vpc.vpc_id, subnet.subnet_id)
     
     if message_txt:
         notify = boto3.client('sns')
