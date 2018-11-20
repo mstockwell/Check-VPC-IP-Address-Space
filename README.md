@@ -22,13 +22,13 @@ Set the timeout to 180 seconds.
 
 Add the following Environment Variables:
 
-VPC_ID (The VPC_ID of the VPC you wanted monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
+`VPC_ID` (The VPC_ID of the VPC you wanted monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
 
-TARGET_ARN (The value will be the ARN of the SNS topic you create in the following step)
+`TARGET_ARN` (The value will be the ARN of the SNS topic you create in the following step)
 
-PERCENTAGE_WARNING (A number from 0 - 100 indicating remaining % of available IPs within a subnet.  For instance 20 means you want to be notified when a subnet only has 20% remaining IP addresses available)
+`PERCENTAGE_WARNING` (A number from 0 - 100 indicating remaining % of available IPs within a subnet.  For instance 20 means you want to be notified when a subnet only has 20% remaining IP addresses available)
 
-MESSAGE_SUBJECT (The subject line of the message you wanted displayed (e.g. in email or txt message)
+`MESSAGE_SUBJECT` (The subject line of the message you wanted displayed (e.g. in email or txt message)
 
 Create an SNS topic and update the TARGET_ARN environment variable with the SNS topic ARN. Subscribe to the topic.
 
@@ -40,12 +40,13 @@ Create a role for Lambda with necessary permissions to describe regions, vpcs, s
 At the command line, enter the following command and press return: (select an S3 bucket and name for your CloudFormation stack)
 `aws cloudformation package --template-file template.yaml  --output-template-file output.yaml --s3-bucket <yourbucketname>  --s3-prefix <cloudformationstack>`  
 
-The above command package the lambda function and puts it in the S3 bucket.  In addition, the SAM template will be transformed into a CloudFormation template to be used in the next step for creating your infrastructure stack.
+The above command packages the lambda function and puts it in the S3 bucket.  In addition, the SAM template will be transformed into a CloudFormation template to be used in the next step for creating your infrastructure stack.
 
 Next, enter the following command and press return: `aws cloudformation deploy --template-file output.yaml --stack-name <cloudformationstack>` --capabilities CAPABILITY_NAMED_IAM
 
 You should see Waiting for changeset to be created.. 
 The above command creates the necessary AWS infrastructure including a lambda role, an SNS topic, and a CloudWatch Schedule Event.  
+
 Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, you will see the message, Successfully created/updated stack - `<cloudformationstack>`
 
 Once deployed, you will need to enter a VPC_ID in the environment variable IF you want single VPC mode, otherwise the utility will scan all subnets, in all VPCs
