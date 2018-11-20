@@ -47,7 +47,7 @@ Next, enter the following command and press return: `aws cloudformation deploy -
 You should see Waiting for changeset to be created.. 
 The above command creates the necessary AWS infrastructure including a lambda role, an SNS topic, and a CloudWatch Schedule Event.  
 
-Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, you will see the message, Successfully created/updated stack - `<cloudformationstack>`
+Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, you will see the message, `Successfully created/updated stack - <cloudformationstack>`
 
 Once deployed, you will need to enter a VPC_ID in the environment variable IF you want single VPC mode, otherwise the utility will scan all subnets, in all VPCs
 in all Regions.  In addition, you will need to subscribe to the SNS topic named, 'IPAddressExahustion'.  You will also need to enable the Cloudwatch Schedule Event named,
