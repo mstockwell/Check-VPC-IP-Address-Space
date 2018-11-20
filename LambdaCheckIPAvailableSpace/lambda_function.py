@@ -30,7 +30,11 @@ def lambda_handler(event, context):
                             ' in Region ' + region['RegionName'] + ' has ' + str(percent_remaining) \
                             + '% remaining IP addresses available...' +'\r'
     else:
-        ec2 = boto3.resource('ec2')
+        if 'REGION_ID' not in os.environ or os.environ['REGION_ID'] == '':
+            region_id = os.environ['AWS_REGION']
+        else:
+            region_id = os.environ['REGION_ID']
+        ec2 = boto3.resource('ec2',region_name=region_id)
         vpc = ec2.Vpc(os.environ['VPC_ID'])
         subnets = list(vpc.subnets.all())
         for subnet in subnets:

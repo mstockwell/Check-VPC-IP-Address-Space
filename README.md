@@ -6,7 +6,7 @@ The default is 20% but this can be changed using the PERCENTAGE_WARNING environm
 
 # Two Modes: Single VPC and All VPCs All Regions
 There are two options for running this utility: single VPC and All Regions All VPCs.  If the environment variable VPC_ID is populated,
-the utility will only check for subnets within the VPC idenfified by VPC_ID.  If VPC_ID is left blank or missing, the utility will
+the utility will only check for subnets within the VPC idenfified by VPC_ID and REGION_ID.  If VPC_ID is left blank or missing, the utility will
 check all subnets in all VPCs in all Regions.  Selecting this option will require the Lambda function to run for 1-2 minutes, or more
 (based on initial tests).
 
@@ -23,6 +23,8 @@ Set the timeout to 180 seconds.
 Add the following Environment Variables:
 
 `VPC_ID` (The VPC_ID of the VPC you want monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
+
+'REGION_ID' (IF monitoring a single VPC you must include this value.  Otherwise, the Region defaults to the REGION the lambda is running in, which may not be the same as the VPC you want to monitor.)
 
 `TARGET_ARN` (The value will be the ARN of the SNS topic you create in the following step)
 

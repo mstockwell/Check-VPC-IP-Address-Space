@@ -57,6 +57,7 @@ Resources:
       Environment:
         Variables:
           VPC_ID: ''
+          REGION_ID: ''
           PERCENTAGE_WARNING: '20'
           TARGET_ARN: !Ref IPAddressExahustionSNSTopic
           MESSAGE_SUBJECT: 'You have subnets running out of available ip addresses!'           
