@@ -2,9 +2,6 @@ import boto3
 import os
 import ipaddress
 
-ec2 = boto3.resource('ec2')
-notify = boto3.client('sns')
-
 def compute_available_ips(subnet):
     available_ips = subnet.available_ip_address_count
     total_ips = ipaddress.ip_network(subnet.cidr_block).num_addresses
@@ -14,10 +11,9 @@ def lambda_handler(event, context):
     percent_warning = int(os.environ['PERCENTAGE_WARNING'])
     target_arn = os.environ['TARGET_ARN']
     subject = os.environ['MESSAGE_SUBJECT']
-    vpc = ec2.Vpc(os.environ['VPC_ID'])
     message_txt =''
     
-    if not vpc.vpc_id:
+    if 'VPC_ID' not in os.environ or os.environ['VPC_ID'] == '' :
         region_client = boto3.client('ec2')
         regions = region_client.describe_regions()
         for region in regions['Regions']:
@@ -34,6 +30,8 @@ def lambda_handler(event, context):
                             ' in Region ' + region['RegionName'] + ' has ' + str(percent_remaining) \
                             + '% remaining IP addresses available...' +'\r'
     else:
+        ec2 = boto3.resource('ec2')
+        vpc = ec2.Vpc(os.environ['VPC_ID'])
         subnets = list(vpc.subnets.all())
         for subnet in subnets:
             percent_remaining = compute_available_ips(subnet)
@@ -42,6 +40,7 @@ def lambda_handler(event, context):
                 str(percent_remaining) + '% remaining IP addresses available...' +'\r'
     
     if message_txt:
+        notify = boto3.client('sns')
         notify.publish (
         TargetArn=target_arn,
         Subject=subject,
