@@ -3,7 +3,7 @@ Description: Checks available % of IP addresses within subnets
 Resources:
   CheckIPsAvailable:
     Properties:
-      CodeUri: s3://mels3skobucket/LambdaFunction/def7e32021aa521f62239879ab15c0e9
+      CodeUri: s3://mels3skobucket/LambdaFunction/748b12d8beb02e38758e938d272cc56d
       Description: Checks percentage of available IP address within a subnet
       Environment:
         Variables:
