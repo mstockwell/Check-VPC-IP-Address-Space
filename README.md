@@ -14,7 +14,12 @@ check all subnets in all VPCs in all Regions.  Selecting this option will requir
 Download the files to your local machine using git.  For example: git clone https://github.com/mstockwell/Check-VPC-IP-Address-Space.git
 
 ## Copy & Paste Deployement
-Author a new Python 3.6 lambda function from Scratch.  Copy the code from `LambdaCheckIPAvailableSpace\lambda_function.py` into you new lambda and save. Set the timeout to 180 seconds. 
+Author a new Python 3.6 lambda function from Scratch.  
+
+Copy the code from `LambdaCheckIPAvailableSpace\lambda_function.py` into your new lambda and save. 
+
+Set the timeout to 180 seconds. 
+
 Add the following Environment Variables:
 
 VPC_ID (The VPC_ID of the VPC you wanted monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
@@ -26,7 +31,9 @@ PERCENTAGE_WARNING (A number from 0 - 100 indicating remaining % of available IP
 MESSAGE_SUBJECT (The subject line of the message you wanted displayed (e.g. in email or txt message)
 
 Create an SNS topic and update the TARGET_ARN environment variable with the SNS topic ARN. Subscribe to the topic.
+
 Create a CloudWatch Schedule Event that triggers the Lambda function based on a rate you set, e.g. every 8 hours.
+
 Create a role for Lambda with necessary permissions to describe regions, vpcs, subnets, and write to cloudwatch logs, and publish to SNS topic.
 
 ## SAM Deployment
