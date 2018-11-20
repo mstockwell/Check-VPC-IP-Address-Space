@@ -24,7 +24,7 @@ Add the following Environment Variables:
 
 `VPC_ID` (The VPC_ID of the VPC you want monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
 
-'REGION_ID' (IF monitoring a single VPC you must include this value.  Otherwise, the Region defaults to the REGION the lambda is running in, which may not be the same as the VPC you want to monitor.)
+`REGION_ID` (IF monitoring a single VPC you must include this value.  Otherwise, the Region defaults to the REGION the lambda is running in, which may not be the same as the VPC you want to monitor.)
 
 `TARGET_ARN` (The value will be the ARN of the SNS topic you create in the following step)
 
@@ -39,7 +39,7 @@ Create a CloudWatch Schedule Event that triggers the Lambda function based on a 
 Create a role for Lambda with necessary permissions to describe regions, vpcs, subnets, and write to cloudwatch logs, and publish to SNS topic.
 
 ## SAM Deployment
-At the command line, enter the following command and press return: (select an S3 bucket and name for your CloudFormation stack)
+At the command line, enter the following command and press return: (select an existing S3 bucket in your acount and name for your CloudFormation stack)
 `aws cloudformation package --template-file template.yaml  --output-template-file output.yaml --s3-bucket <yourbucketname>  --s3-prefix <cloudformationstack>`  
 
 The above command packages the lambda function and puts it in the S3 bucket.  In addition, the SAM template will be transformed into a CloudFormation template to be used in the next step for creating your infrastructure stack.
