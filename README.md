@@ -7,7 +7,7 @@ The default is 20% but this can be changed using the PERCENTAGE_WARNING environm
 # Two Modes: Single VPC and All VPCs All Regions
 There are two options for running this utility: single VPC and All Regions All VPCs.  If the environment variable VPC_ID is populated,
 the utility will only check for subnets within the VPC idenfified by VPC_ID.  If VPC_ID is left blank or missing, the utility will
-check all subnets in all VPCs in all Regions.  Selecting this option will require the Lambda function to run for 2-3 minutes, or more
+check all subnets in all VPCs in all Regions.  Selecting this option will require the Lambda function to run for 1-2 minutes, or more
 (based on initial tests).
 
 # Two Options for Deployment: Copy & Paste Lambda or SAM
