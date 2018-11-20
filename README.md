@@ -50,5 +50,5 @@ The above command creates the necessary AWS infrastructure including a lambda ro
 Deploying the infrastructure will take approximately 3 minutes.  Upon completion of the stack deployment, you will see the message, `Successfully created/updated stack - <cloudformationstack>`
 
 Once deployed, you will need to enter a VPC_ID in the environment variable IF you want single VPC mode, otherwise the utility will scan all subnets, in all VPCs
-in all Regions.  In addition, you will need to subscribe to the SNS topic named, 'IPAddressExahustion'.  You will also need to enable the Cloudwatch Schedule Event named,
-'Lambda_Check_Available_IP_Addresses'.  The event runs every 8 hours.  You can edit the run rate to meet your needs.
+in all Regions.  In addition, you will need to subscribe to the SNS topic named, 'IPAddressExahustion'.  
+You will also need to enable the Cloudwatch Schedule Event named, `Lambda_Check_Available_IP_Addresses`.  The event runs every 8 hours.  You can edit the run rate to meet your needs.
