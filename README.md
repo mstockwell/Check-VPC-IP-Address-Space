@@ -8,13 +8,13 @@ The default is 20% but this can be changed using the PERCENTAGE_WARNING environm
 There are two options for running this utility: single VPC and All Regions All VPCs.  If the environment variable VPC_ID is populated,
 the utility will only check for subnets within the VPC idenfified by VPC_ID.  If VPC_ID is left blank or missing, the utility will
 check all subnets in all VPCs in all Regions.  Selecting this option will require the Lambda function to run for 2-3 minutes, or more
-(based on intial tests).
+(based on initial tests).
 
 # Two Options for Deployment: Copy & Paste Lambda or SAM
 Download the files to your local machine using git.  For example: git clone https://github.com/mstockwell/Check-VPC-IP-Address-Space.git
 
 ## Copy & Paste Deployement
-Author a new Python 3.6 lambda function from Scratch.  Copy the code from LambdaCheckIPAvailableSpace\lambda_function.py into you new lambda and save. Set the timeout to 180 seconds. 
+Author a new Python 3.6 lambda function from Scratch.  Copy the code from `LambdaCheckIPAvailableSpace\lambda_function.py` into you new lambda and save. Set the timeout to 180 seconds. 
 Add the following Environment Variables:
 
 VPC_ID (The VPC_ID of the VPC you wanted monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
