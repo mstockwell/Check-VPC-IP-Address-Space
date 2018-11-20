@@ -42,6 +42,7 @@ def lambda_handler(event, context):
             if percent_remaining <= percent_warning:
                 message_txt += 'Subnet: ' + subnet.id + ' in VPC ' + vpc.vpc_id + ' has ' + \
                 str(percent_remaining) + '% remaining IP addresses available...' +'\r'
+    
     if message_txt:
         notify.publish (
         TargetArn=target_arn,
