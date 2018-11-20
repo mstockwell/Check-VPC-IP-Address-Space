@@ -22,7 +22,7 @@ Set the timeout to 180 seconds.
 
 Add the following Environment Variables:
 
-`VPC_ID` (The VPC_ID of the VPC you wanted monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
+`VPC_ID` (The VPC_ID of the VPC you want monitored.  If no VPC_ID is provided, the utility scans all subnets in all vpcs in all regions)
 
 `TARGET_ARN` (The value will be the ARN of the SNS topic you create in the following step)
 
@@ -42,7 +42,7 @@ At the command line, enter the following command and press return: (select an S3
 
 The above command packages the lambda function and puts it in the S3 bucket.  In addition, the SAM template will be transformed into a CloudFormation template to be used in the next step for creating your infrastructure stack.
 
-Next, enter the following command and press return: `aws cloudformation deploy --template-file output.yaml --stack-name <cloudformationstack>` --capabilities CAPABILITY_NAMED_IAM
+Next, enter the following command and press return: `aws cloudformation deploy --template-file output.yaml --stack-name <cloudformationstack> --capabilities CAPABILITY_NAMED_IAM`
 
 You should see Waiting for changeset to be created.. 
 The above command creates the necessary AWS infrastructure including a lambda role, an SNS topic, and a CloudWatch Schedule Event.  
