@@ -59,4 +59,4 @@ in all Regions.  In addition, you will need to subscribe to the SNS topic named,
 You will also need to enable the Cloudwatch Schedule Event named, `Lambda_Check_Available_IP_Addresses`.  The event runs every 8 hours.  You can edit the run rate to meet your needs.
 
 If you want the function to reclaim (delete) unused network interfaces in the subnets identified as running low on available IP addresses, set the Environment
-Variable `RECLAIM_ENIS` to TRUE.  
+Variable `RECLAIM_ENIS` to TRUE.  Note: The list of reclaimed network interfaces, by region and vpc, will be listed in the cloudwatch logs.
