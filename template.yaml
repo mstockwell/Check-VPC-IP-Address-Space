@@ -25,10 +25,12 @@ Resources:
               -
                 Effect: 'Allow'
                 Action: [
+                'ec2:DescribeNetworkInterfaces',
                 'ec2:DescribeSubnets',
                 'ec2:DescribeVpcs',
                 'ec2:DescribeVpcAttribute',
-                'ec2:DescribeRegions'
+                'ec2:DescribeRegions',
+                'ec2:DeleteNetworkInterface'
                 ]
                 Resource: '*'
               -
@@ -60,7 +62,8 @@ Resources:
           REGION_ID: ''
           PERCENTAGE_WARNING: '20'
           TARGET_ARN: !Ref IPAddressExahustionSNSTopic
-          MESSAGE_SUBJECT: 'You have subnets running out of available ip addresses!'           
+          MESSAGE_SUBJECT: 'You have subnets running out of available ip addresses!'  
+          RECLAIM_ENIS: 'FALSE'
   ScheduledRule: 
     Type: 'AWS::Events::Rule'
     Properties: 

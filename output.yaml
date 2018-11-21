@@ -3,12 +3,13 @@ Description: Checks available % of IP addresses within subnets
 Resources:
   CheckIPsAvailable:
     Properties:
-      CodeUri: s3://mels3skobucket/LambdaFunction/27b584481d9335202b3b58e1f1cdf2b6
+      CodeUri: s3://mels3skobucket/LambdaFunction/14ba9c59949b3a09b72fad49c31fbcca
       Description: Checks percentage of available IP address within a subnet
       Environment:
         Variables:
           MESSAGE_SUBJECT: You have subnets running out of available ip addresses!
           PERCENTAGE_WARNING: '20'
+          RECLAIM_ENIS: 'FALSE'
           REGION_ID: ''
           TARGET_ARN:
             Ref: IPAddressExahustionSNSTopic
@@ -39,10 +40,12 @@ Resources:
       - PolicyDocument:
           Statement:
           - Action:
+            - ec2:DescribeNetworkInterfaces
             - ec2:DescribeSubnets
             - ec2:DescribeVpcs
             - ec2:DescribeVpcAttribute
             - ec2:DescribeRegions
+            - ec2:DeleteNetworkInterface
             Effect: Allow
             Resource: '*'
           - Action: sns:Publish

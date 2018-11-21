@@ -1,3 +1,4 @@
+from __future__ import print_function
 import boto3
 import os
 import ipaddress
@@ -5,7 +6,7 @@ import ipaddress
 percent_warning = int(os.environ['PERCENTAGE_WARNING'])
 target_arn = os.environ['TARGET_ARN']
 subject = os.environ['MESSAGE_SUBJECT']
-
+reclaim_enis = os.environ['RECLAIM_ENIS'].upper()
 subnets_with_low_ips =[]    
 
 def check_for_low_ips (subnets, vpc, region):
@@ -15,6 +16,12 @@ def check_for_low_ips (subnets, vpc, region):
         percent_remaining = round(available_ips/total_ips,2)*100
         if percent_remaining <= percent_warning:
             subnets_with_low_ips.append([subnet.id,vpc,region,percent_remaining])
+            if reclaim_enis == 'TRUE':
+                network_interfaces = subnet.network_interfaces.all()
+                for network_interface in network_interfaces:
+                    if network_interface.status == 'available':
+                        network_interface.delete()
+                        print('ENI: ', network_interface.id, ' in VPC: ', vpc, ' in Region: ', region, 'Reclaimed.')
     return (subnets_with_low_ips)
                     
 def lambda_handler(event, context):
@@ -34,10 +41,10 @@ def lambda_handler(event, context):
             region_id = os.environ['AWS_REGION']
         else:
             region_id = os.environ['REGION_ID']
-        ec2 = boto3.resource('ec2',region_name=region_id)
-        vpc = ec2.Vpc(os.environ['VPC_ID'])
+        vpc_client = boto3.resource('ec2',region_name=region_id)
+        vpc = vpc_client.Vpc(os.environ['VPC_ID'])
         subnets_flagged = check_for_low_ips(list(vpc.subnets.all()), vpc.vpc_id, region_id)
-        
+
     if subnets_flagged:
         message_txt = ''
         for subnet in subnets_flagged:
