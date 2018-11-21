@@ -32,6 +32,8 @@ Add the following Environment Variables:
 
 `MESSAGE_SUBJECT` (The subject line of the message you wanted displayed (e.g. in email or txt message)
 
+`RECLAIM_ENIS` (If TRUE, available unattached enis will be reclaimed (deleted) in the subnets identified as runnling low on available IP addresses).  Default value is FALSE.
+
 Create an SNS topic and update the TARGET_ARN environment variable with the SNS topic ARN. Subscribe to the topic.
 
 Create a CloudWatch Schedule Event that triggers the Lambda function based on a rate you set, e.g. every 8 hours.
@@ -55,3 +57,6 @@ Once deployed, you will need to enter a VPC_ID in the environment variable IF yo
 in all Regions.  In addition, you will need to subscribe to the SNS topic named, 'IPAddressExahustion'.  
 
 You will also need to enable the Cloudwatch Schedule Event named, `Lambda_Check_Available_IP_Addresses`.  The event runs every 8 hours.  You can edit the run rate to meet your needs.
+
+If you want the function to reclaim (delete) unused network interfaces in the subnets identified as running low on available IP addresses, set the Environment
+Variable `RECLAIM_ENIS` to TRUE.  
