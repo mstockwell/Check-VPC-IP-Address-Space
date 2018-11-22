@@ -1,4 +1,4 @@
-# A Lambda utility which checks remaining availiable IP addresses within VPC subnets
+# A Lambda utility which checks remaining availiable IP addresses within VPC subnets. Optionally deletes unused network intefaces in subnets running low on available IP addresses.
 
 VPC subnets have a finite number of available ip addresses.  IT Automations and some AWS services, such as Lambda accessing resources in a VPC, can exhaust the
 available IPs within your subnets without you explicitly knowing it. This utility allows you to set a threshold for notification when the remaining available IPs in a subnet reach a certain percentage (of the total IPs within the subnet). 
