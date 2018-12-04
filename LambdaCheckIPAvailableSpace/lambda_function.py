@@ -21,7 +21,7 @@ def check_for_low_ips (subnets, vpc, region):
                 for network_interface in network_interfaces:
                     if network_interface.status == 'available':
                         network_interface.delete()
-                        print('ENI {0} in VPC {1} in Region {2} has been reclaimed.'.format(network_interface.id,vpc,region))
+                        print('ENI {} in VPC {} in Region {} has been reclaimed.'.format(network_interface.id,vpc,region))
     return (subnets_with_low_ips)
                     
 def lambda_handler(event, context):
@@ -49,9 +49,7 @@ def lambda_handler(event, context):
     if subnets_flagged:
         message_txt = ''
         for subnet in subnets_flagged:
-            message_txt += 'Subnet: ' + subnet[0] + ' in VPC ' + subnet[1] + \
-                ' in Region ' + subnet[2] + ' has ' + str(subnet[3]) \
-                + '% remaining IP addresses available!' +'\r'
+            message_txt += 'Subnet: {} in VPC {} in Region {} has {}% remaining IP addresses available!'.format(subnet[0],subnet[1],subnet[2],subnet[3])
         notify = boto3.client('sns')
         notify.publish (
         TargetArn=target_arn,
