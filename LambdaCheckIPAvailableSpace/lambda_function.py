@@ -23,7 +23,18 @@ def check_for_low_ips (subnets, vpc, region):
                         network_interface.delete()
                         print('ENI {} in VPC {} in Region {} has been reclaimed.'.format(network_interface.id,vpc,region))
     return (subnets_with_low_ips)
-                    
+
+def send_notification(subnets_flagged):
+    message_txt = ''
+    for subnet in subnets_flagged:
+        message_txt += 'Subnet: {} in VPC {} in Region {} has {}% remaining IP addresses available!'.format(subnet[0],subnet[1],subnet[2],subnet[3])
+    notify = boto3.client('sns')
+    notify.publish (
+    TargetArn=target_arn,
+    Subject=subject,
+    Message=(message_txt)
+    )
+        
 def lambda_handler(event, context):
     subnets_flagged = []
     if 'VPC_ID' not in os.environ or os.environ['VPC_ID'] == '' :
@@ -45,14 +56,6 @@ def lambda_handler(event, context):
         vpc_client = boto3.resource('ec2',region_name=region_id)
         vpc = vpc_client.Vpc(os.environ['VPC_ID'])
         subnets_flagged = check_for_low_ips(list(vpc.subnets.all()), vpc.vpc_id, region_id)
-
     if subnets_flagged:
-        message_txt = ''
-        for subnet in subnets_flagged:
-            message_txt += 'Subnet: {} in VPC {} in Region {} has {}% remaining IP addresses available!'.format(subnet[0],subnet[1],subnet[2],subnet[3])
-        notify = boto3.client('sns')
-        notify.publish (
-        TargetArn=target_arn,
-        Subject=subject,
-        Message=(message_txt)
-        )
+        send_notification(subnets_flagged)
+        
